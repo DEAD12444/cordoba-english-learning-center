@@ -95,28 +95,39 @@
     </div>
   </section>
 
-  <!-- Contact Section -->
-  <section id="contact" class="py-16">
-    <div class="max-w-5xl mx-auto px-6 text-center">
-      <h3 class="text-3xl font-semibold mb-6">Get in Touch</h3>
-      <p class="text-gray-600 mb-8">Start your English learning journey with us today.</p>
-      <div class="bg-white p-8 rounded-2xl shadow max-w-xl mx-auto">
-        <form class="space-y-4">
-          <input type="text" placeholder="Your Name" class="w-full border p-3 rounded-lg" />
-          <input type="email" placeholder="Your Email" class="w-full border p-3 rounded-lg" />
-          <textarea placeholder="Your Message" class="w-full border p-3 rounded-lg"></textarea>
-          <button class="w-full bg-blue-900 text-white py-3 rounded-lg font-semibold hover:bg-blue-800 transition">Send Message</button>
-        </form>
+ <!-- Contact Section -->
+<section id="contact" class="py-16">
+  <div class="max-w-5xl mx-auto px-6 text-center">
+    <h3 class="text-3xl font-semibold mb-6">Get in Touch</h3>
+    <p class="text-gray-600 mb-8">Start your English learning journey with us today.</p>
+    <div class="bg-white p-8 rounded-2xl shadow max-w-xl mx-auto">
+      <!-- Formspree Form -->
+      <form action="https://formspree.io/f/xqebklay" method="POST">
+        <div class="space-y-4">
+          <input type="text" name="name" placeholder="Your Name" class="w-full border p-3 rounded-lg" required />
+          <input type="email" name="email" placeholder="Your Email" class="w-full border p-3 rounded-lg" required />
+          <input type="tel" name="phone" placeholder="Your Phone Number" class="w-full border p-3 rounded-lg" />
+          <select name="course" class="w-full border p-3 rounded-lg">
+            <option value="">Select Course Interest</option>
+            <option value="beginner">Beginner English</option>
+            <option value="intermediate">Intermediate English</option>
+            <option value="advanced">Advanced English</option>
+            <option value="business">Business English</option>
+          </select>
+          <textarea name="message" placeholder="Your Message" class="w-full border p-3 rounded-lg" rows="4"></textarea>
+          <button type="submit" class="w-full bg-blue-900 text-white py-3 rounded-lg font-semibold hover:bg-blue-800 transition">
+            Send Message
+          </button>
+        </div>
+      </form>
+      
+      <!-- Alternative Contact Info -->
+      <div class="mt-8 pt-8 border-t">
+        <h4 class="font-semibold mb-4">Or contact us directly:</h4>
+        <p class="text-gray-600">📧 Email: sohaibtanoliatd@gmail.com.com</p>
+        <p class="text-gray-600">📞 Phone: +92 3199625641</p>
+        <p class="text-gray-600">📍 Address: International School of Cordoba, Jhangi Syedan, Abbottabad</p>
       </div>
     </div>
-  </section>
-
-  <!-- Footer -->
-  <footer class="bg-blue-900 text-white py-6">
-    <div class="max-w-7xl mx-auto px-6 text-center">
-      <p>&copy; 2026 Cordoba English Learning Center. All rights reserved.</p>
-    </div>
-  </footer>
-
-</body>
-</html>
+  </div>
+</section>
