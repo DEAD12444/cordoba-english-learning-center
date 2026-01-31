@@ -4,79 +4,485 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Cordoba English Learning Center</title>
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="logo.png">
+  
+  <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
   <style>
-    body { font-family: 'Poppins', sans-serif; }
+    body { 
+      font-family: 'Poppins', sans-serif; 
+      scroll-behavior: smooth;
+    }
+    
+    /* Video Course Modal Styles */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.8);
+    }
+    
+    .modal-content {
+      background-color: #fff;
+      margin: 5% auto;
+      padding: 20px;
+      border-radius: 10px;
+      width: 90%;
+      max-width: 900px;
+      position: relative;
+    }
+    
+    .close-modal {
+      position: absolute;
+      right: 20px;
+      top: 10px;
+      font-size: 28px;
+      cursor: pointer;
+      color: #333;
+    }
+    
+    /* Certificate Styles */
+    .certificate {
+      border: 20px solid #1e3a8a;
+      padding: 40px;
+      background: linear-gradient(45deg, #f8fafc, #e0f2fe);
+      text-align: center;
+      max-width: 800px;
+      margin: 0 auto;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    }
+    
+    /* Login/Signup Modal */
+    .auth-modal {
+      display: none;
+    }
+    
+    /* Progress bar */
+    .progress-container {
+      background-color: #e5e7eb;
+      border-radius: 10px;
+      overflow: hidden;
+      height: 10px;
+    }
+    
+    .progress-bar {
+      background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+      height: 100%;
+      width: 0%;
+      transition: width 0.5s ease;
+    }
+    
+    /* Hover Effects */
+    .hover-lift {
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .hover-lift:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    }
   </style>
 </head>
 <body class="bg-slate-50 text-gray-800">
-
   <!-- Header -->
-  <header class="bg-blue-900 text-white">
-    <div class="max-w-7xl mx-auto px-6 py-6 flex flex-col md:flex-row justify-between items-center">
-      <div class="flex flex-col md:flex-row items-center gap-6 mb-6 md:mb-0">
-        <!-- Large logo placed prominently -->
-        <div class="flex items-center justify-center">
-          <img src="logo.png" 
-               alt="Cordoba English Learning Center Logo" 
-               class="h-28 w-auto" />
-        </div>
-        <div class="text-center md:text-left">
-          <h1 class="text-4xl md:text-5xl font-bold">Cordoba English Learning Center</h1>
-          <p class="text-lg mt-2 text-blue-200">Today's Learners, Tomorrow's Speakers</p>
+  <header class="bg-blue-900 text-white sticky top-0 z-50 shadow-lg">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+      <div class="flex items-center gap-4">
+        <img src="logo.png" 
+             alt="Cordoba English Learning Center Logo" 
+             class="h-16 w-auto" />
+        <div>
+          <h1 class="text-2xl font-bold">Cordoba English</h1>
+          <p class="text-sm text-blue-200 hidden md:block">Today's Learners, Tomorrow's Speakers</p>
         </div>
       </div>
-      <nav class="space-x-6 hidden md:block">
-        <a href="#about" class="hover:text-blue-300">About</a>
-        <a href="#courses" class="hover:text-blue-300">Courses</a>
-        <a href="#why" class="hover:text-blue-300">Why Us</a>
-        <a href="#contact" class="hover:text-blue-300">Contact</a>
+      
+      <nav class="hidden md:flex space-x-8 items-center">
+        <a href="#home" class="hover:text-blue-300 font-medium">Home</a>
+        <a href="#courses" class="hover:text-blue-300 font-medium">Courses</a>
+        <a href="#free-course" class="hover:text-blue-300 font-medium">Free Course</a>
+        <a href="#certificate" class="hover:text-blue-300 font-medium">Certificate</a>
+        <a href="#why" class="hover:text-blue-300 font-medium">Why Us</a>
+        <a href="#contact" class="hover:text-blue-300 font-medium">Contact</a>
+        
+        <!-- Login/Signup Buttons -->
+        <div class="flex space-x-3 ml-6">
+          <button onclick="openLoginModal()" class="bg-transparent border border-white px-4 py-2 rounded-lg hover:bg-white hover:text-blue-900 transition font-medium">
+            <i class="fas fa-sign-in-alt mr-2"></i>Login
+          </button>
+          <button onclick="openSignupModal()" class="bg-white text-blue-900 px-4 py-2 rounded-lg font-semibold hover:bg-blue-100 transition">
+            <i class="fas fa-user-plus mr-2"></i>Sign Up
+          </button>
+        </div>
       </nav>
+      
+      <!-- Mobile Menu Button -->
+      <button id="mobile-menu-btn" class="md:hidden text-2xl">
+        <i class="fas fa-bars"></i>
+      </button>
+    </div>
+    
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="md:hidden bg-blue-800 px-6 py-4 hidden">
+      <div class="flex flex-col space-y-4">
+        <a href="#home" class="hover:text-blue-300 py-2">Home</a>
+        <a href="#courses" class="hover:text-blue-300 py-2">Courses</a>
+        <a href="#free-course" class="hover:text-blue-300 py-2">Free Course</a>
+        <a href="#certificate" class="hover:text-blue-300 py-2">Certificate</a>
+        <a href="#why" class="hover:text-blue-300 py-2">Why Us</a>
+        <a href="#contact" class="hover:text-blue-300 py-2">Contact</a>
+        <div class="pt-4 border-t border-blue-700">
+          <button onclick="openLoginModal()" class="w-full bg-transparent border border-white px-4 py-2 rounded-lg mb-3 hover:bg-white hover:text-blue-900 transition">
+            <i class="fas fa-sign-in-alt mr-2"></i>Login
+          </button>
+          <button onclick="openSignupModal()" class="w-full bg-white text-blue-900 px-4 py-2 rounded-lg font-semibold hover:bg-blue-100 transition">
+            <i class="fas fa-user-plus mr-2"></i>Sign Up
+          </button>
+        </div>
+      </div>
     </div>
   </header>
 
   <!-- Hero Section -->
-  <section class="bg-gradient-to-r from-blue-900 to-blue-700 text-white">
+  <section id="home" class="bg-gradient-to-r from-blue-900 to-blue-700 text-white">
     <div class="max-w-7xl mx-auto px-6 py-20 grid md:grid-cols-2 gap-10 items-center">
       <div>
         <h2 class="text-4xl md:text-5xl font-bold mb-4">Master English with Confidence</h2>
-        <p class="text-lg md:text-xl mb-8">Build confidence, fluency, and real-world English skills with our structured multi-month English learning program.</p>
-        <a href="#contact" class="inline-block bg-white text-blue-900 font-semibold px-8 py-3 rounded-xl shadow hover:bg-blue-100 transition">Enroll Now</a>
+        <p class="text-lg md:text-xl mb-8 opacity-90">Build confidence, fluency, and real-world English skills with our structured multi-month English learning program.</p>
+        <div class="flex flex-col sm:flex-row gap-4">
+          <a href="#free-course" class="inline-block bg-white text-blue-900 font-semibold px-8 py-3 rounded-xl shadow hover:bg-blue-100 transition hover-lift text-center">
+            <i class="fas fa-play-circle mr-2"></i>Start Free Course
+          </a>
+          <a href="#contact" class="inline-block bg-transparent border-2 border-white text-white font-semibold px-8 py-3 rounded-xl hover:bg-white/10 transition hover-lift text-center">
+            <i class="fas fa-calendar-check mr-2"></i>Enroll Now
+          </a>
+        </div>
       </div>
       <div class="flex justify-center">
-        <div class="bg-blue-800 p-8 rounded-2xl shadow-lg max-w-md">
+        <div class="bg-blue-800/50 p-8 rounded-2xl shadow-lg max-w-md backdrop-blur-sm">
           <h3 class="text-2xl font-bold mb-4 text-center">Why Learn English?</h3>
           <ul class="space-y-3 text-lg">
-            <li class="flex items-center gap-2">✓ Global communication</li>
-            <li class="flex items-center gap-2">✓ Career opportunities</li>
-            <li class="flex items-center gap-2">✓ Academic advancement</li>
-            <li class="flex items-center gap-2">✓ Cultural understanding</li>
+            <li class="flex items-center gap-3"><i class="fas fa-globe text-blue-300"></i> Global communication</li>
+            <li class="flex items-center gap-3"><i class="fas fa-briefcase text-blue-300"></i> Career opportunities</li>
+            <li class="flex items-center gap-3"><i class="fas fa-graduation-cap text-blue-300"></i> Academic advancement</li>
+            <li class="flex items-center gap-3"><i class="fas fa-users text-blue-300"></i> Cultural understanding</li>
           </ul>
         </div>
       </div>
     </div>
   </section>
 
+  <!-- Free Course Section -->
+  <section id="free-course" class="py-16 bg-gradient-to-br from-blue-50 to-indigo-50">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="text-center mb-12">
+        <span class="bg-blue-100 text-blue-800 text-sm font-semibold px-4 py-1 rounded-full">FREE OFFER</span>
+        <h2 class="text-4xl md:text-5xl font-bold text-gray-800 mt-4 mb-4">Free 2-Hour English Masterclass</h2>
+        <p class="text-gray-600 text-xl max-w-3xl mx-auto">Start your English journey with our comprehensive free video course</p>
+      </div>
+      
+      <div class="grid md:grid-cols-2 gap-10 items-center">
+        <!-- Course Preview -->
+        <div class="bg-white p-8 rounded-2xl shadow-lg hover-lift">
+          <div class="mb-6">
+            <div class="flex justify-between items-center mb-2">
+              <span class="font-semibold text-gray-700">Course Progress</span>
+              <span id="progress-percent" class="font-bold text-blue-700">0%</span>
+            </div>
+            <div class="progress-container">
+              <div id="progress-bar" class="progress-bar"></div>
+            </div>
+          </div>
+          
+          <div class="space-y-4 mb-8">
+            <div class="flex items-center justify-between p-4 bg-blue-50 rounded-lg hover:bg-blue-100 transition">
+              <div class="flex items-center">
+                <i class="fas fa-play-circle text-2xl mr-4 text-blue-600"></i>
+                <div>
+                  <h4 class="font-semibold text-gray-800">Introduction to English</h4>
+                  <p class="text-sm text-gray-600">15 min • Basics</p>
+                </div>
+              </div>
+              <button onclick="openVideoModal('intro')" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition">
+                <i class="fas fa-play mr-2"></i>Play
+              </button>
+            </div>
+            
+            <div class="flex items-center justify-between p-4 bg-blue-50 rounded-lg hover:bg-blue-100 transition">
+              <div class="flex items-center">
+                <i class="fas fa-play-circle text-2xl mr-4 text-blue-600"></i>
+                <div>
+                  <h4 class="font-semibold text-gray-800">Grammar Essentials</h4>
+                  <p class="text-sm text-gray-600">30 min • Intermediate</p>
+                </div>
+              </div>
+              <button onclick="openVideoModal('grammar')" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition">
+                <i class="fas fa-play mr-2"></i>Play
+              </button>
+            </div>
+            
+            <div class="flex items-center justify-between p-4 bg-blue-50 rounded-lg hover:bg-blue-100 transition">
+              <div class="flex items-center">
+                <i class="fas fa-play-circle text-2xl mr-4 text-blue-600"></i>
+                <div>
+                  <h4 class="font-semibold text-gray-800">Speaking Practice</h4>
+                  <p class="text-sm text-gray-600">45 min • Advanced</p>
+                </div>
+              </div>
+              <button onclick="openVideoModal('speaking')" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition">
+                <i class="fas fa-play mr-2"></i>Play
+              </button>
+            </div>
+            
+            <div class="flex items-center justify-between p-4 bg-blue-50 rounded-lg hover:bg-blue-100 transition">
+              <div class="flex items-center">
+                <i class="fas fa-play-circle text-2xl mr-4 text-blue-600"></i>
+                <div>
+                  <h4 class="font-semibold text-gray-800">Final Test & Certificate</h4>
+                  <p class="text-sm text-gray-600">30 min • Assessment</p>
+                </div>
+              </div>
+              <button onclick="openCertificateModal()" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg transition">
+                <i class="fas fa-award mr-2"></i>Get Certificate
+              </button>
+            </div>
+          </div>
+          
+          <div class="text-center">
+            <button onclick="startFreeCourse()" class="bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold px-8 py-3 rounded-xl hover:from-blue-700 hover:to-indigo-700 transition hover-lift">
+              <i class="fas fa-rocket mr-2"></i>Start Free Course Now
+            </button>
+            <p class="text-sm mt-4 text-gray-600">Join 5,000+ students who completed this course</p>
+          </div>
+        </div>
+        
+        <!-- Course Benefits -->
+        <div>
+          <h3 class="text-3xl font-bold text-gray-800 mb-6">What You'll Learn</h3>
+          <div class="space-y-6">
+            <div class="flex items-start">
+              <div class="bg-blue-100 p-3 rounded-full mr-4">
+                <i class="fas fa-check text-blue-600"></i>
+              </div>
+              <div>
+                <h4 class="font-semibold text-xl mb-2 text-gray-800">English Fundamentals</h4>
+                <p class="text-gray-600">Master basic grammar, vocabulary, and sentence structure</p>
+              </div>
+            </div>
+            
+            <div class="flex items-start">
+              <div class="bg-blue-100 p-3 rounded-full mr-4">
+                <i class="fas fa-check text-blue-600"></i>
+              </div>
+              <div>
+                <h4 class="font-semibold text-xl mb-2 text-gray-800">Speaking Confidence</h4>
+                <p class="text-gray-600">Overcome speaking anxiety with practical exercises</p>
+              </div>
+            </div>
+            
+            <div class="flex items-start">
+              <div class="bg-blue-100 p-3 rounded-full mr-4">
+                <i class="fas fa-check text-blue-600"></i>
+              </div>
+              <div>
+                <h4 class="font-semibold text-xl mb-2 text-gray-800">Real Conversations</h4>
+                <p class="text-gray-600">Practice with real-life dialogue examples</p>
+              </div>
+            </div>
+            
+            <div class="flex items-start">
+              <div class="bg-blue-100 p-3 rounded-full mr-4">
+                <i class="fas fa-check text-blue-600"></i>
+              </div>
+              <div>
+                <h4 class="font-semibold text-xl mb-2 text-gray-800">Free Certificate</h4>
+                <p class="text-gray-600">Earn a completion certificate to showcase your achievement</p>
+              </div>
+            </div>
+          </div>
+          
+          <div class="mt-10 bg-gradient-to-r from-blue-600 to-blue-700 text-white p-8 rounded-2xl shadow-lg">
+            <h4 class="font-bold text-2xl mb-4">🎓 Get Your Certificate</h4>
+            <p class="mb-4 opacity-90">Complete the 2-hour course and pass the final test to receive your official Cordoba English Certificate.</p>
+            <button onclick="openCertificateModal()" class="bg-white text-blue-700 font-semibold px-6 py-3 rounded-lg hover:bg-blue-50 transition">
+              <i class="fas fa-certificate mr-2"></i>Preview Certificate
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- About Section -->
-  <section id="about" class="py-16">
+  <section id="about" class="py-16 bg-white">
     <div class="max-w-6xl mx-auto px-6 text-center">
-      <h3 class="text-3xl font-semibold mb-6">About Cordoba</h3>
-      <p class="text-gray-600 max-w-3xl mx-auto">Cordoba English Learning Center is a dedicated English academy focused on helping learners speak English with confidence and clarity. Our 2‑month structured course emphasizes practical speaking skills, clear grammar, useful vocabulary, and correct pronunciation, guiding students from understanding to confident communication in real-life situations.</p>
+      <h3 class="text-3xl font-semibold mb-6 text-gray-800">About Cordoba</h3>
+      <p class="text-gray-600 max-w-3xl mx-auto text-lg">Cordoba English Learning Center is a dedicated English academy focused on helping learners speak English with confidence and clarity. Our 2‑month structured course emphasizes practical speaking skills, clear grammar, useful vocabulary, and correct pronunciation, guiding students from understanding to confident communication in real-life situations.</p>
     </div>
   </section>
 
   <!-- Courses Section -->
-  <section id="courses" class="bg-white py-16">
+  <section id="courses" class="py-16 bg-gray-50">
     <div class="max-w-7xl mx-auto px-6">
-      <h3 class="text-3xl font-semibold text-center mb-12">Our Courses</h3>
-      <div class="flex justify-center">
-        <div class="bg-slate-50 p-8 rounded-2xl shadow max-w-md text-center">
-          <h4 class="text-2xl font-semibold mb-4">Complete English Speaking Course</h4>
-          <p class="text-gray-600 mb-4">A structured multi-month English course designed to take learners from basic understanding to confident, fluent speaking. This program focuses on grammar, vocabulary, pronunciation, and real-life communication.</p>
-          <p class="font-medium text-blue-900">Duration: 2 Months</p>
+      <h3 class="text-3xl font-semibold text-center mb-12 text-gray-800">Our Courses</h3>
+      <div class="grid md:grid-cols-3 gap-8">
+        <!-- Free Course Card -->
+        <div class="bg-white p-8 rounded-2xl shadow-md hover-lift">
+          <div class="text-center mb-6">
+            <span class="bg-green-100 text-green-800 text-xs font-semibold px-3 py-1 rounded-full">FREE</span>
+            <h4 class="text-2xl font-semibold mt-4 mb-3">English Basics</h4>
+            <p class="text-gray-600 mb-4">Perfect for absolute beginners starting their English journey</p>
+          </div>
+          <ul class="space-y-3 mb-6">
+            <li class="flex items-center text-gray-700"><i class="fas fa-check text-green-500 mr-3"></i> Basic vocabulary & grammar</li>
+            <li class="flex items-center text-gray-700"><i class="fas fa-check text-green-500 mr-3"></i> Simple conversations</li>
+            <li class="flex items-center text-gray-700"><i class="fas fa-check text-green-500 mr-3"></i> Pronunciation guide</li>
+          </ul>
+          <button onclick="startFreeCourse()" class="w-full bg-green-600 text-white py-3 rounded-lg font-semibold hover:bg-green-700 transition">Start Free</button>
+        </div>
+        
+        <!-- Main Course Card -->
+        <div class="bg-white p-8 rounded-2xl shadow-lg hover-lift border-2 border-blue-500 relative">
+          <div class="absolute -top-3 left-1/2 transform -translate-x-1/2">
+            <span class="bg-blue-600 text-white text-sm font-bold px-4 py-1 rounded-full">POPULAR</span>
+          </div>
+          <div class="text-center mb-6">
+            <h4 class="text-2xl font-semibold mt-4 mb-3">Complete English Speaking</h4>
+            <p class="text-gray-600 mb-4">From basic understanding to confident, fluent speaking</p>
+            <div class="text-3xl font-bold text-blue-700 mb-2">2 Months</div>
+            <p class="text-gray-500">Structured program</p>
+          </div>
+          <ul class="space-y-3 mb-6">
+            <li class="flex items-center text-gray-700"><i class="fas fa-check text-blue-500 mr-3"></i> Grammar & vocabulary mastery</li>
+            <li class="flex items-center text-gray-700"><i class="fas fa-check text-blue-500 mr-3"></i> Real-life communication</li>
+            <li class="flex items-center text-gray-700"><i class="fas fa-check text-blue-500 mr-3"></i> Pronunciation correction</li>
+            <li class="flex items-center text-gray-700"><i class="fas fa-check text-blue-500 mr-3"></i> Certificate included</li>
+          </ul>
+          <a href="#contact" class="w-full bg-blue-900 text-white py-3 rounded-lg font-semibold hover:bg-blue-800 transition block text-center">Enroll Now</a>
+        </div>
+        
+        <!-- Advanced Course Card -->
+        <div class="bg-white p-8 rounded-2xl shadow-md hover-lift">
+          <div class="text-center mb-6">
+            <h4 class="text-2xl font-semibold mt-4 mb-3">Business English</h4>
+            <p class="text-gray-600 mb-4">Professional communication for career advancement</p>
+            <div class="text-3xl font-bold text-purple-700 mb-2">3 Months</div>
+            <p class="text-gray-500">Advanced program</p>
+          </div>
+          <ul class="space-y-3 mb-6">
+            <li class="flex items-center text-gray-700"><i class="fas fa-check text-purple-500 mr-3"></i> Professional vocabulary</li>
+            <li class="flex items-center text-gray-700"><i class="fas fa-check text-purple-500 mr-3"></i> Meetings & presentations</li>
+            <li class="flex items-center text-gray-700"><i class="fas fa-check text-purple-500 mr-3"></i> Business writing</li>
+          </ul>
+          <a href="#contact" class="w-full bg-purple-700 text-white py-3 rounded-lg font-semibold hover:bg-purple-800 transition block text-center">Learn More</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Certificate Section -->
+  <section id="certificate" class="py-16 bg-white">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="text-center mb-12">
+        <h2 class="text-4xl font-bold text-gray-800 mb-4">Official Completion Certificate</h2>
+        <p class="text-gray-600 text-xl">Showcase your achievement with our verified certificate</p>
+      </div>
+      
+      <div class="grid md:grid-cols-2 gap-10 items-center">
+        <!-- Certificate Preview -->
+        <div class="certificate hover-lift">
+          <div class="mb-6">
+            <img src="logo.png" 
+                 alt="Cordoba Logo" class="h-20 mx-auto mb-4">
+            <h3 class="text-3xl font-bold text-blue-900 mb-2">CERTIFICATE OF COMPLETION</h3>
+            <p class="text-gray-600">This is to certify that</p>
+            <h4 id="student-name" class="text-4xl font-bold my-6 text-gray-800">[Your Name Here]</h4>
+            <p class="text-gray-700">has successfully completed the</p>
+            <h5 class="text-2xl font-bold my-4 text-blue-800">Complete English Speaking Course</h5>
+            <p class="text-gray-600">with distinction on</p>
+            <p class="font-semibold my-4 text-gray-800" id="cert-date">[Completion Date]</p>
+            
+            <div class="flex justify-between mt-10 pt-6 border-t border-gray-300">
+              <div class="text-center">
+                <div class="h-1 w-16 bg-gray-400 mx-auto mb-2"></div>
+                <p class="text-gray-600">Instructor Signature</p>
+              </div>
+              <div class="text-center">
+                <img src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=CordobaEnglishCertificate2024&color=1e3a8a" 
+                     alt="Certificate QR" class="mx-auto">
+                <p class="text-xs mt-2 text-gray-500">Verify Certificate</p>
+              </div>
+              <div class="text-center">
+                <div class="h-1 w-16 bg-gray-400 mx-auto mb-2"></div>
+                <p class="text-gray-600">Center Director</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Certificate Info -->
+        <div>
+          <h3 class="text-3xl font-bold mb-6 text-gray-800">Why Our Certificate Matters</h3>
+          <div class="space-y-6">
+            <div class="bg-blue-50 p-6 rounded-xl hover-lift">
+              <div class="flex items-center mb-3">
+                <i class="fas fa-shield-alt text-blue-600 text-2xl mr-4"></i>
+                <h4 class="text-xl font-semibold">Verified & Secure</h4>
+              </div>
+              <p class="text-gray-700">Each certificate has a unique ID and QR code for verification.</p>
+            </div>
+            
+            <div class="bg-blue-50 p-6 rounded-xl hover-lift">
+              <div class="flex items-center mb-3">
+                <i class="fas fa-briefcase text-blue-600 text-2xl mr-4"></i>
+                <h4 class="text-xl font-semibold">Boost Your Career</h4>
+              </div>
+              <p class="text-gray-700">Add to LinkedIn profile and resume to showcase your skills.</p>
+            </div>
+            
+            <div class="bg-blue-50 p-6 rounded-xl hover-lift">
+              <div class="flex items-center mb-3">
+                <i class="fas fa-globe text-blue-600 text-2xl mr-4"></i>
+                <h4 class="text-xl font-semibold">Internationally Recognized</h4>
+              </div>
+              <p class="text-gray-700">Our certificates are recognized by employers worldwide.</p>
+            </div>
+          </div>
+          
+          <div class="mt-10 bg-gray-100 p-8 rounded-2xl">
+            <h4 class="font-bold text-xl mb-4 text-gray-800">How to Get Your Certificate:</h4>
+            <ol class="list-decimal pl-5 space-y-3 text-gray-700">
+              <li>Sign up for a free account</li>
+              <li>Complete all video modules</li>
+              <li>Pass the final assessment test (80%+ score)</li>
+              <li>Download your certificate instantly</li>
+              <li>Share on social media and LinkedIn</li>
+            </ol>
+            
+            <div class="mt-8 flex flex-col sm:flex-row gap-4">
+              <button onclick="openSignupModal()" class="bg-blue-900 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-800 transition">
+                <i class="fas fa-user-plus mr-2"></i>Sign Up for Free
+              </button>
+              <button onclick="downloadCertificate()" class="bg-green-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-green-700 transition">
+                <i class="fas fa-download mr-2"></i>Download Certificate
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -85,47 +491,509 @@
   <!-- Why Choose Us -->
   <section id="why" class="py-16 bg-blue-50">
     <div class="max-w-7xl mx-auto px-6">
-      <h3 class="text-3xl font-semibold text-center mb-12">Why Choose Cordoba?</h3>
-      <div class="grid md:grid-cols-4 gap-6">
-        <div class="bg-white p-6 rounded-xl shadow text-center">Structured multi‑month learning plan</div>
-        <div class="bg-white p-6 rounded-xl shadow text-center">Speaking‑focused teaching approach</div>
-        <div class="bg-white p-6 rounded-xl shadow text-center">Experienced instructors</div>
-        <div class="bg-white p-6 rounded-xl shadow text-center">Supportive learning environment</div>
+      <h3 class="text-3xl font-semibold text-center mb-12 text-gray-800">Why Choose Cordoba?</h3>
+      <div class="grid md:grid-cols-4 gap-8">
+        <div class="bg-white p-8 rounded-2xl shadow text-center hover-lift">
+          <div class="text-blue-600 text-4xl mb-4">
+            <i class="fas fa-calendar-alt"></i>
+          </div>
+          <h4 class="font-bold text-lg mb-3">Structured Learning Plan</h4>
+          <p class="text-gray-600">Multi‑month program with clear milestones and progress tracking</p>
+        </div>
+        <div class="bg-white p-8 rounded-2xl shadow text-center hover-lift">
+          <div class="text-blue-600 text-4xl mb-4">
+            <i class="fas fa-comments"></i>
+          </div>
+          <h4 class="font-bold text-lg mb-3">Speaking‑Focused Approach</h4>
+          <p class="text-gray-600">Practical communication skills for real-world situations</p>
+        </div>
+        <div class="bg-white p-8 rounded-2xl shadow text-center hover-lift">
+          <div class="text-blue-600 text-4xl mb-4">
+            <i class="fas fa-chalkboard-teacher"></i>
+          </div>
+          <h4 class="font-bold text-lg mb-3">Experienced Instructors</h4>
+          <p class="text-gray-600">Certified teachers with years of English teaching experience</p>
+        </div>
+        <div class="bg-white p-8 rounded-2xl shadow text-center hover-lift">
+          <div class="text-blue-600 text-4xl mb-4">
+            <i class="fas fa-users"></i>
+          </div>
+          <h4 class="font-bold text-lg mb-3">Supportive Environment</h4>
+          <p class="text-gray-600">Personalized feedback and community learning support</p>
+        </div>
       </div>
     </div>
   </section>
 
  <!-- Contact Section -->
-<section id="contact" class="py-16">
+<section id="contact" class="py-16 bg-white">
   <div class="max-w-5xl mx-auto px-6 text-center">
-    <h3 class="text-3xl font-semibold mb-6">Get in Touch</h3>
-    <p class="text-gray-600 mb-8">Start your English learning journey with us today.</p>
-    <div class="bg-white p-8 rounded-2xl shadow max-w-xl mx-auto">
-      <!-- Formspree Form -->
-      <form action="https://formspree.io/f/xqebklay" method="POST">
-        <div class="space-y-4">
-          <input type="text" name="name" placeholder="Your Name" class="w-full border p-3 rounded-lg" required />
-          <input type="email" name="email" placeholder="Your Email" class="w-full border p-3 rounded-lg" required />
-          <input type="tel" name="phone" placeholder="Your Phone Number" class="w-full border p-3 rounded-lg" />
-          <select name="course" class="w-full border p-3 rounded-lg">
-            <option value="">Select Course Interest</option>
-            <option value="spoken">English Spoken</option>
-          </select>
-          <textarea name="message" placeholder="Your Message" class="w-full border p-3 rounded-lg" rows="4"></textarea>
-          <button type="submit" class="w-full bg-blue-900 text-white py-3 rounded-lg font-semibold hover:bg-blue-800 transition">
-            Send Message
-          </button>
+    <h3 class="text-3xl font-semibold mb-6 text-gray-800">Get in Touch</h3>
+    <p class="text-gray-600 mb-8 text-lg">Start your English learning journey with us today.</p>
+    <div class="bg-white p-8 rounded-2xl shadow-lg max-w-4xl mx-auto">
+      <div class="grid md:grid-cols-2 gap-8">
+        <!-- Contact Form -->
+        <div>
+          <h4 class="text-xl font-semibold mb-6 text-left">Send us a Message</h4>
+          <form action="https://formspree.io/f/xqebklay" method="POST">
+            <div class="space-y-4">
+              <input type="text" name="name" placeholder="Your Name" class="w-full border p-3 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" required />
+              <input type="email" name="email" placeholder="Your Email" class="w-full border p-3 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" required />
+              <input type="tel" name="phone" placeholder="Your Phone Number" class="w-full border p-3 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
+              <select name="course" class="w-full border p-3 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                <option value="">Select Course Interest</option>
+                <option value="spoken">English Spoken</option>
+                <option value="intermediate">Intermediate English</option>
+                <option value="advanced">Advanced English</option>
+                <option value="business">Business English</option>
+              </select>
+              <textarea name="message" placeholder="Your Message" class="w-full border p-3 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" rows="4"></textarea>
+              <button type="submit" class="w-full bg-blue-900 text-white py-3 rounded-lg font-semibold hover:bg-blue-800 transition">
+                Send Message
+              </button>
+            </div>
+          </form>
         </div>
-      </form>
-      
-      <!-- Alternative Contact Info -->
-      <div class="mt-8 pt-8 border-t">
-        <h4 class="font-semibold mb-4">Or contact us directly:</h4>
-        <p class="text-gray-600">📧 Email: sohaibtanoliatd@gmail.com.com</p>
-        <p class="text-gray-600">📞 Phone: +92 3199625641</p>
-        <p class="text-gray-600">📍 Address: International School of Cordoba, Jhangi Syedan, Abbottabad</p>
+        
+        <!-- Contact Information -->
+        <div class="bg-blue-50 p-8 rounded-xl">
+          <h4 class="text-xl font-semibold mb-6">Contact Information</h4>
+          <div class="space-y-6 text-left">
+            <div class="flex items-start">
+              <div class="bg-blue-100 p-3 rounded-full mr-4">
+                <i class="fas fa-envelope text-blue-600"></i>
+              </div>
+              <div>
+                <h5 class="font-semibold">Email</h5>
+                <p class="text-gray-700">sohaibtanoliatd@gmail.com</p>
+              </div>
+            </div>
+            
+            <div class="flex items-start">
+              <div class="bg-blue-100 p-3 rounded-full mr-4">
+                <i class="fas fa-phone text-blue-600"></i>
+              </div>
+              <div>
+                <h5 class="font-semibold">Phone</h5>
+                <p class="text-gray-700">+92 319 9625641</p>
+                <p class="text-sm text-gray-600">Mon-Fri: 9 AM - 6 PM</p>
+              </div>
+            </div>
+            
+            <div class="flex items-start">
+              <div class="bg-blue-100 p-3 rounded-full mr-4">
+                <i class="fas fa-map-marker-alt text-blue-600"></i>
+              </div>
+              <div>
+                <h5 class="font-semibold">Address</h5>
+                <p class="text-gray-700">International School of Cordoba</p>
+                <p class="text-gray-700">Jhangi Syedan, Abbottabad</p>
+                <p class="text-gray-700">KPK, Pakistan</p>
+              </div>
+            </div>
+            
+            <div class="pt-6 border-t border-blue-200">
+              <h5 class="font-semibold mb-3">Office Hours</h5>
+              <p class="text-gray-700">Monday - Friday: 9:00 AM - 6:00 PM</p>
+              <p class="text-gray-700">Saturday: 10:00 AM - 2:00 PM</p>
+              <p class="text-gray-700">Sunday: Closed</p>
+            </div>
+          </div>
+          
+          <div class="mt-8 pt-6 border-t border-blue-200">
+            <h5 class="font-semibold mb-4">Follow Us</h5>
+            <div class="flex space-x-4">
+              <a href="#" class="bg-blue-600 text-white p-3 rounded-full hover:bg-blue-700 transition"><i class="fab fa-facebook-f"></i></a>
+              <a href="#" class="bg-blue-400 text-white p-3 rounded-full hover:bg-blue-500 transition"><i class="fab fa-twitter"></i></a>
+              <a href="#" class="bg-pink-600 text-white p-3 rounded-full hover:bg-pink-700 transition"><i class="fab fa-instagram"></i></a>
+              <a href="#" class="bg-blue-700 text-white p-3 rounded-full hover:bg-blue-800 transition"><i class="fab fa-linkedin-in"></i></a>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 </section>
 
+  <!-- Footer -->
+  <footer class="bg-blue-900 text-white py-8">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="grid md:grid-cols-4 gap-8">
+        <div>
+          <img src="logo.png" alt="Cordoba Logo" class="h-16 mb-4">
+          <p class="text-blue-200">Today's Learners, Tomorrow's Speakers</p>
+        </div>
+        <div>
+          <h5 class="font-bold text-lg mb-4">Quick Links</h5>
+          <ul class="space-y-2">
+            <li><a href="#home" class="hover:text-blue-300">Home</a></li>
+            <li><a href="#courses" class="hover:text-blue-300">Courses</a></li>
+            <li><a href="#free-course" class="hover:text-blue-300">Free Course</a></li>
+            <li><a href="#certificate" class="hover:text-blue-300">Certificate</a></li>
+          </ul>
+        </div>
+        <div>
+          <h5 class="font-bold text-lg mb-4">Resources</h5>
+          <ul class="space-y-2">
+            <li><a href="#" class="hover:text-blue-300">Blog</a></li>
+            <li><a href="#" class="hover:text-blue-300">Free Lessons</a></li>
+            <li><a href="#" class="hover:text-blue-300">English Tips</a></li>
+            <li><a href="#" class="hover:text-blue-300">FAQs</a></li>
+          </ul>
+        </div>
+        <div>
+          <h5 class="font-bold text-lg mb-4">Legal</h5>
+          <ul class="space-y-2">
+            <li><a href="#" class="hover:text-blue-300">Privacy Policy</a></li>
+            <li><a href="#" class="hover:text-blue-300">Terms of Service</a></li>
+            <li><a href="#" class="hover:text-blue-300">Refund Policy</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="border-t border-blue-800 mt-8 pt-8 text-center">
+        <p>&copy; 2024 Cordoba English Learning Center. All rights reserved.</p>
+        <p class="text-blue-300 text-sm mt-2">Jhangi Syedan, Abbottabad - KPK, Pakistan</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ========== MODALS ========== -->
+  <!-- Video Modal -->
+  <div id="video-modal" class="modal">
+    <div class="modal-content">
+      <span class="close-modal" onclick="closeVideoModal()">&times;</span>
+      <h3 class="text-2xl font-bold mb-4" id="video-title">English Course Video</h3>
+      <div class="aspect-w-16 aspect-h-9 bg-gray-800 rounded-lg mb-4">
+        <!-- Video Player Placeholder -->
+        <div id="video-player" class="flex items-center justify-center h-96">
+          <div class="text-center text-white">
+            <i class="fas fa-play-circle text-6xl mb-4"></i>
+            <p class="text-xl">Video Lesson</p>
+            <p class="text-sm mt-2">(In a real implementation, this would be a YouTube/Vimeo embed)</p>
+          </div>
+        </div>
+      </div>
+      <div class="flex justify-between items-center">
+        <div>
+          <button onclick="markComplete()" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition">
+            <i class="fas fa-check mr-2"></i>Mark as Complete
+          </button>
+        </div>
+        <div>
+          <button onclick="closeVideoModal()" class="bg-gray-300 px-4 py-2 rounded-lg hover:bg-gray-400 transition">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Certificate Modal -->
+  <div id="certificate-modal" class="modal">
+    <div class="modal-content">
+      <span class="close-modal" onclick="closeCertificateModal()">&times;</span>
+      <h3 class="text-2xl font-bold mb-4 text-center">Your Certificate is Ready!</h3>
+      
+      <div class="certificate mb-6">
+        <div class="text-center">
+          <h3 class="text-3xl font-bold text-blue-900 mb-2">CERTIFICATE OF COMPLETION</h3>
+          <p class="text-gray-600">This is to certify that</p>
+          <h4 class="text-4xl font-bold my-6 text-gray-800" id="modal-student-name">Alex Johnson</h4>
+          <p class="text-gray-700">has successfully completed the</p>
+          <h5 class="text-2xl font-bold my-4 text-blue-800">Complete English Speaking Course</h5>
+          <p class="text-gray-600">with distinction on</p>
+          <p class="font-semibold my-4">December 15, 2024</p>
+          <p class="text-sm text-gray-500 mt-6">Certificate ID: CORDOBA-EN-2024-789123</p>
+        </div>
+      </div>
+      
+      <div class="text-center space-y-4">
+        <p class="text-gray-600">Share your achievement with the world!</p>
+        <div class="flex flex-wrap justify-center gap-4">
+          <button onclick="downloadCertificate()" class="bg-blue-900 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-800 transition">
+            <i class="fas fa-download mr-2"></i>Download PDF
+          </button>
+          <button class="bg-blue-500 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-600 transition">
+            <i class="fab fa-linkedin mr-2"></i>Share on LinkedIn
+          </button>
+          <button class="bg-green-500 text-white px-6 py-3 rounded-lg font-semibold hover:bg-green-600 transition">
+            <i class="fas fa-share-alt mr-2"></i>Share
+          </button>
+        </div>
+        <button onclick="closeCertificateModal()" class="text-blue-600 hover:underline">Continue Learning</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Login Modal -->
+  <div id="login-modal" class="modal auth-modal">
+    <div class="modal-content max-w-md">
+      <span class="close-modal" onclick="closeLoginModal()">&times;</span>
+      <h3 class="text-2xl font-bold mb-6 text-center">Login to Your Account</h3>
+      
+      <form id="login-form" class="space-y-4">
+        <div>
+          <label class="block mb-2 text-gray-700">Email Address</label>
+          <input type="email" id="login-email" class="w-full border p-3 rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="you@example.com" required>
+        </div>
+        
+        <div>
+          <label class="block mb-2 text-gray-700">Password</label>
+          <input type="password" id="login-password" class="w-full border p-3 rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="••••••••" required>
+        </div>
+        
+        <div class="flex justify-between items-center">
+          <label class="flex items-center text-gray-700">
+            <input type="checkbox" class="mr-2"> Remember me
+          </label>
+          <a href="#" class="text-blue-600 hover:underline text-sm">Forgot password?</a>
+        </div>
+        
+        <button type="submit" class="w-full bg-blue-900 text-white py-3 rounded-lg font-semibold hover:bg-blue-800 transition">
+          Login to Account
+        </button>
+        
+        <div class="text-center pt-4 border-t">
+          <p class="text-gray-600">Don't have an account? 
+            <a href="#" onclick="switchToSignup()" class="text-blue-600 font-semibold hover:underline">Sign up here</a>
+          </p>
+        </div>
+        
+        <div class="text-center">
+          <p class="text-gray-500 text-sm mb-3">Or login with</p>
+          <div class="flex justify-center space-x-4">
+            <button type="button" class="bg-gray-100 px-4 py-2 rounded-lg hover:bg-gray-200 transition">
+              <i class="fab fa-google text-red-500 mr-2"></i> Google
+            </button>
+            <button type="button" class="bg-gray-100 px-4 py-2 rounded-lg hover:bg-gray-200 transition">
+              <i class="fab fa-facebook text-blue-600 mr-2"></i> Facebook
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Signup Modal -->
+  <div id="signup-modal" class="modal auth-modal">
+    <div class="modal-content max-w-md">
+      <span class="close-modal" onclick="closeSignupModal()">&times;</span>
+      <h3 class="text-2xl font-bold mb-6 text-center">Create Your Free Account</h3>
+      
+      <form id="signup-form" class="space-y-4">
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block mb-2 text-gray-700">First Name</label>
+            <input type="text" id="signup-fname" class="w-full border p-3 rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="John" required>
+          </div>
+          <div>
+            <label class="block mb-2 text-gray-700">Last Name</label>
+            <input type="text" id="signup-lname" class="w-full border p-3 rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="Doe" required>
+          </div>
+        </div>
+        
+        <div>
+          <label class="block mb-2 text-gray-700">Email Address</label>
+          <input type="email" id="signup-email" class="w-full border p-3 rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="you@example.com" required>
+        </div>
+        
+        <div>
+          <label class="block mb-2 text-gray-700">Password</label>
+          <input type="password" id="signup-password" class="w-full border p-3 rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="••••••••" required>
+          <p class="text-sm text-gray-500 mt-1">At least 8 characters with letters and numbers</p>
+        </div>
+        
+        <div>
+          <label class="block mb-2 text-gray-700">Confirm Password</label>
+          <input type="password" id="signup-confirm" class="w-full border p-3 rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="••••••••" required>
+        </div>
+        
+        <label class="flex items-start text-gray-700">
+          <input type="checkbox" class="mr-2 mt-1" required>
+          <span class="text-sm">I agree to the <a href="#" class="text-blue-600 hover:underline">Terms of Service</a> and <a href="#" class="text-blue-600 hover:underline">Privacy Policy</a></span>
+        </label>
+        
+        <button type="submit" class="w-full bg-blue-900 text-white py-3 rounded-lg font-semibold hover:bg-blue-800 transition">
+          Create Free Account
+        </button>
+        
+        <div class="text-center pt-4 border-t">
+          <p class="text-gray-600">Already have an account? 
+            <a href="#" onclick="switchToLogin()" class="text-blue-600 font-semibold hover:underline">Login here</a>
+          </p>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- JavaScript -->
+  <script>
+    // Mobile Menu Toggle
+    document.getElementById('mobile-menu-btn').addEventListener('click', function() {
+      const menu = document.getElementById('mobile-menu');
+      menu.classList.toggle('hidden');
+    });
+
+    // Video Course Progress
+    let progress = 0;
+    const progressBar = document.getElementById('progress-bar');
+    const progressPercent = document.getElementById('progress-percent');
+
+    function updateProgress() {
+      progress += 25;
+      if (progress > 100) progress = 100;
+      
+      progressBar.style.width = progress + '%';
+      progressPercent.textContent = progress + '%';
+      
+      if (progress === 100) {
+        document.getElementById('student-name').textContent = 'Alex Johnson';
+        const today = new Date();
+        document.getElementById('cert-date').textContent = today.toLocaleDateString('en-US', {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric'
+        });
+      }
+    }
+
+    // Video Modal Functions
+    function openVideoModal(videoType) {
+      const modal = document.getElementById('video-modal');
+      const title = document.getElementById('video-title');
+      
+      if (videoType === 'intro') {
+        title.textContent = 'Introduction to English';
+      } else if (videoType === 'grammar') {
+        title.textContent = 'Grammar Essentials';
+      } else if (videoType === 'speaking') {
+        title.textContent = 'Speaking Practice';
+      }
+      
+      modal.style.display = 'block';
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeVideoModal() {
+      document.getElementById('video-modal').style.display = 'none';
+      document.body.style.overflow = 'auto';
+    }
+
+    function markComplete() {
+      updateProgress();
+      closeVideoModal();
+      alert('Lesson marked as complete!');
+    }
+
+    // Certificate Modal
+    function openCertificateModal() {
+      document.getElementById('certificate-modal').style.display = 'block';
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeCertificateModal() {
+      document.getElementById('certificate-modal').style.display = 'none';
+      document.body.style.overflow = 'auto';
+    }
+
+    // Download Certificate
+    function downloadCertificate() {
+      alert('Certificate downloaded! In a real implementation, this would generate a PDF.');
+    }
+
+    // Start Free Course
+    function startFreeCourse() {
+      const isLoggedIn = false; // Change based on actual login status
+      
+      if (!isLoggedIn) {
+        openSignupModal();
+      } else {
+        progress = 0;
+        updateProgress();
+        alert('Starting your free course!');
+      }
+    }
+
+    // Login/Signup Modal Functions
+    function openLoginModal() {
+      closeSignupModal();
+      document.getElementById('login-modal').style.display = 'block';
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeLoginModal() {
+      document.getElementById('login-modal').style.display = 'none';
+      document.body.style.overflow = 'auto';
+    }
+
+    function openSignupModal() {
+      closeLoginModal();
+      document.getElementById('signup-modal').style.display = 'block';
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeSignupModal() {
+      document.getElementById('signup-modal').style.display = 'none';
+      document.body.style.overflow = 'auto';
+    }
+
+    function switchToSignup() {
+      closeLoginModal();
+      openSignupModal();
+    }
+
+    function switchToLogin() {
+      closeSignupModal();
+      openLoginModal();
+    }
+
+    // Form Submissions
+    document.getElementById('login-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const email = document.getElementById('login-email').value;
+      
+      // In real implementation: API call to login
+      alert(`Login attempt for: ${email}`);
+      closeLoginModal();
+    });
+
+    document.getElementById('signup-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const fname = document.getElementById('signup-fname').value;
+      const email = document.getElementById('signup-email').value;
+      
+      // Update certificate name
+      document.getElementById('student-name').textContent = fname;
+      document.getElementById('modal-student-name').textContent = fname;
+      
+      // In real implementation: API call to register
+      alert(`Account created for: ${fname} (${email})`);
+      closeSignupModal();
+      
+      // Auto-start free course after signup
+      progress = 0;
+      updateProgress();
+    });
+
+    // Close modals when clicking outside
+    window.onclick = function(event) {
+      const modals = document.querySelectorAll('.modal');
+      modals.forEach(modal => {
+        if (event.target == modal) {
+          modal.style.display = 'none';
+          document.body.style.overflow = 'auto';
+        }
+      });
+    }
+
+    // Close modals with Escape key
+    document.addEventListener('keydown', function(event) {
+      if (event.key === 'Escape') {
+        const modals = document.querySelectorAll('.modal');
+        modals.forEach(modal => {
+          modal.style.display = 'none';
+        });
+        document.body.style.overflow = 'auto';
+      }
+    });
+  </script>
+</body>
+</html>
